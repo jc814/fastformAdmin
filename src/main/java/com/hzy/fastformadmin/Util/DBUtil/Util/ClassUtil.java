@@ -33,23 +33,48 @@ public class ClassUtil {
         return tableName.value();
     }
 
-    public static <T> String  GetkeyName(Class<T> tClass) {
-        T obj = null;
-        String keyName = "";
+    public static <T> String  GetkeyFieldValue(Class<T> tClass) {
+        String value = "";
+        Field[] fields = tClass.getFields();
         try {
-            obj = tClass.newInstance();
-            Field[] fields = tClass.getClass().getDeclaredFields();
+            Object obj = tClass.newInstance();
             for (Field field : fields) {
                 if (field.getDeclaredAnnotation(Key.class)!= null) {
-                    keyName = field.getName();
+                    value = field.get(obj).toString();
                     break;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            return keyName;
+        } finally {
+            return value;
         }
+    }
+
+    public static <T> String  GetkeyfieldName(Class<T> tClass) {
+        String keyName = "";
+        Field[] fields = tClass.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getDeclaredAnnotation(Key.class)!= null) {
+                keyName = field.getName();
+                break;
+            }
+        }
+        return keyName;
+
+    }
+
+    public static <T> String  GetkeyfieldName(Class<T> tClass) {
+        String keyName = "";
+        Field[] fields = tClass.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getDeclaredAnnotation(Key.class)!= null) {
+                keyName = field.getName();
+                break;
+            }
+        }
+        return keyName;
+
     }
 
 }

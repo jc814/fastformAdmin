@@ -1,6 +1,8 @@
 package com.hzy.fastformadmin.Util.DBUtil.base;
 
 import com.hzy.fastformadmin.Util.DBUtil.Util.ClassUtil;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
@@ -9,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
+@Data
+@Accessors(chain = true)
 public class Command {
     private JdbcTemplate jdbcTemplate;
     private DriverManagerDataSource dataSource;
