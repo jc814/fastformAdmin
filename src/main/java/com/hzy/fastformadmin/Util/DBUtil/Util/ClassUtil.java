@@ -5,6 +5,8 @@ import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ClassUtil {
@@ -53,7 +55,7 @@ public class ClassUtil {
 
     public static <T> String  GetkeyfieldName(Class<T> tClass) {
         String keyName = "";
-        Field[] fields = tClass.getClass().getDeclaredFields();
+        Field[] fields = tClass.getDeclaredFields();
         for (Field field : fields) {
             if (field.getDeclaredAnnotation(Key.class)!= null) {
                 keyName = field.getName();
@@ -64,16 +66,21 @@ public class ClassUtil {
 
     }
 
-    public static <T> String  GetkeyfieldName(Class<T> tClass) {
-        String keyName = "";
-        Field[] fields = tClass.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (field.getDeclaredAnnotation(Key.class)!= null) {
-                keyName = field.getName();
-                break;
+    public static <T> List<Object> EntityValueToArray(T t) {
+        List<Object> result = new ArrayList<>();
+        Field[] fields = t.getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                if (!field.isAnnotationPresent(Ignore.class)) {
+                    result.add(field.get(t));
+                    break;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return result;
         }
-        return keyName;
 
     }
 
