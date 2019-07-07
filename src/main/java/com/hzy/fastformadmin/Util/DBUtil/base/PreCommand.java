@@ -86,10 +86,8 @@ public class PreCommand {
     }
 
     public <T> Command initDelOrFindObjByParam(String tableName,Map<String,Object> whereMap){
-        List<String> whereKeys ;
-        List<Object> whereValues ;
-        whereKeys = (List<String>)mapToList(whereMap).get("key");
-        whereValues = (List<Object>)mapToList(whereMap).get("values");
+        List<String> whereKeys = (List<String>)mapToList(whereMap).get("key");
+        List<Object> whereValues = (List<Object>)mapToList(whereMap).get("values");
         StringBuffer sql = new StringBuffer();
         if("select".equals("type")){
             sql = sqlBuilder.deleteParamSqlBuild(whereKeys,tableName);
@@ -99,6 +97,13 @@ public class PreCommand {
         Command command = CommandFactory.getCommand();
         command.setSQLText(sql.toString());
         command.setSQLParams(whereValues);
+        return command;
+    }
+
+    public <T> Command initMySqlByParam(String sql ,Map<String,Object> whereMap){
+        sqlBuilder.mySqlBuild(sql,whereMap);
+        Command command = CommandFactory.getCommand();
+        command.setSQLText(sql);
         return command;
     }
 

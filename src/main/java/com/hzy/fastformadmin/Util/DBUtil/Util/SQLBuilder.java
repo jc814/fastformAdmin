@@ -5,7 +5,9 @@ import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /*
  * 实现基本的sql语句
@@ -50,11 +52,11 @@ public class SQLBuilder {
                 }
                 column.deleteCharAt(0);
                 sql.append(column);
-                sql.append(MessageFormat.format(" where {0}=?",KeyName));
+                sql.append(MessageFormat.format(" where {0}=?", KeyName));
                 break;
             case "delete":
                 sql.append(MessageFormat.format("delete from {0} ", tableName));
-                sql.append(MessageFormat.format(" where {0}=?",KeyName));
+                sql.append(MessageFormat.format(" where {0}=?", KeyName));
                 break;
             case "select":
                 sql.append(MessageFormat.format("select * from {0} where ", tableName));
@@ -64,64 +66,74 @@ public class SQLBuilder {
         }
         return sql;
     }
-    public StringBuffer updateParamSqlBuild(List<String> columns,List<String> wheres,String tableName) {
+
+    public StringBuffer updateParamSqlBuild(List<String> columns, List<String> wheres, String tableName) {
         StringBuffer sql = new StringBuffer();
         sql.append(MessageFormat.format("update {0} set ", tableName));
         int i = 0;
         int j = 0;
-        for(String column : columns){
-            if(i != 0){
+        for (String column : columns) {
+            if (i != 0) {
                 sql.append(",");
             }
             i++;
             sql.append(column).append(" = ").append(" ? ");
         }
-        sql.append(" where ");
-        for(String where : wheres){
-            if(j != 0){
-                sql.append(" and ");
-            }
-            j++;
-            sql.append(where).append(" = ").append(" ? ");
-        }
+        sql.append(whereSqlBuild(wheres));
         return sql;
     }
-    public StringBuffer deleteParamSqlBuild(List<String> wheres,String tableName) {
+
+    public StringBuffer deleteParamSqlBuild(List<String> wheres, String tableName) {
         StringBuffer sql = new StringBuffer();
         sql.append(MessageFormat.format("delete from {0} ", tableName));
-        sql.append(" where ");
-        int j = 0;
-        for(String where : wheres){
-            if(j != 0){
-                sql.append(" and ");
-            }
-            j++;
-            sql.append(where).append(" = ").append(" ? ");
-        }
+        sql.append(whereSqlBuild(wheres));
         return sql;
     }
-    public StringBuffer selectParamSqlBuild(List<String> columns,List<String> wheres,String tableName,String type) {
+
+    public StringBuffer selectParamSqlBuild(List<String> columns, List<String> wheres, String tableName, String type) {
         StringBuffer sql = new StringBuffer();
         sql.append("select ");
         int i = 0;
         int j = 0;
-        if("param".equals(type)){
-            for(String column : columns){
-                if(i != 0){
+        if ("param".equals(type)) {
+            for (String column : columns) {
+                if (i != 0) {
                     sql.append(" , ");
                 }
                 i++;
                 sql.append(column);
             }
+        } else {
+            sql.append(" * ");
         }
         sql.append(MessageFormat.format(" from {0} ", tableName));
-        for(String where : wheres){
-            if(j != 0){
+        sql.append(whereSqlBuild(wheres));
+        return sql;
+    }
+
+    public StringBuffer whereSqlBuild(List<String> wheres) {
+        StringBuffer sql = new StringBuffer(" where ");
+        int i = 0;
+        for (String where : wheres) {
+            if (i != 0) {
                 sql.append(" and ");
             }
-            j++;
+            i++;
             sql.append(where).append(" = ").append(" ? ");
         }
         return sql;
     }
+
+    public String mySqlBuild(String sql, Map<String,Object> whereMap) {
+        Iterator entries = whereMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry map = (Map.Entry)entries.next();
+            String paramName = map.getKey().toString();
+            //todo 完成paramName和paramValue对应 注意顺序
+            String newSql = sql.replaceFirst("#"+paramName,whereMap.get(paramName));
+            values.add(map.getValue());
+        }
+        return sql;
+    }
+
 }
