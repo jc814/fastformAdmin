@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80016
 File Encoding         : 65001
 
-Date: 2019-07-03 17:13:45
+Date: 2019-07-08 17:37:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -106,20 +106,21 @@ CREATE TABLE `design_field_search` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for schema
+-- Table structure for design_schema
 -- ----------------------------
-DROP TABLE IF EXISTS `schema`;
-CREATE TABLE `schema` (
+DROP TABLE IF EXISTS `design_schema`;
+CREATE TABLE `design_schema` (
   `ID` varchar(32) DEFAULT NULL COMMENT '主键ID',
   `SCHEMA_NAME` varchar(50) DEFAULT NULL COMMENT '方案名称',
-  `TABLE_ID` varchar(32) DEFAULT NULL COMMENT '关联设计ID',
+  `DESIGN_ID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '关联设计ID',
   `DESCRIBE` varchar(255) DEFAULT NULL COMMENT '方案描述'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of schema
+-- Records of design_schema
 -- ----------------------------
-INSERT INTO `schema` VALUES ('1', '1', '1', '1');
+INSERT INTO `design_schema` VALUES ('1', '1', '1', '1');
+INSERT INTO `design_schema` VALUES ('2', '2', '2', '2');
 
 -- ----------------------------
 -- Table structure for user
@@ -140,3 +141,5 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+INSERT INTO `user` VALUES ('1', '1', '1', '1', '1', '1', '1', '1');
+INSERT INTO `user` VALUES ('2', '2', '2', '2', '2', '2', '2', '2');

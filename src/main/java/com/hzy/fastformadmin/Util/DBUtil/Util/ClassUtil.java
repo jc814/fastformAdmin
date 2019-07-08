@@ -1,5 +1,6 @@
 package com.hzy.fastformadmin.Util.DBUtil.Util;
 
+import com.hzy.fastformadmin.Util.DBUtil.annotation.ColumnName;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Ignore;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
@@ -14,11 +15,11 @@ public class ClassUtil {
         T obj = null;
         try {
             obj = tClass.newInstance();
-            Field[] fields = tClass.getClass().getDeclaredFields();
+            Field[] fields = tClass.getDeclaredFields();
             for (Field field : fields) {
                 if (field.getDeclaredAnnotation(Ignore.class) == null) {
                     field.setAccessible(Boolean.TRUE);
-                    field.set(obj, value.get(field.getName()));
+                    field.set(obj, value.get(field.getAnnotation(ColumnName.class).value()));
                 }
             }
             return obj;
@@ -83,6 +84,18 @@ public class ClassUtil {
         }
 
     }
+
+    public static <T> String fieldToColumnName(Class<T> tClass,String field) {
+        Field objectField = null;
+        try {
+            objectField = tClass.getField(field);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        String columnName = objectField.getAnnotation(ColumnName.class).value();
+        return columnName;
+    }
+
 
 }
 

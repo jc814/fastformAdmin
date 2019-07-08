@@ -16,12 +16,12 @@ public class PreCommand {
             sqlBuilder = new SQLBuilder();
         }
     }
-    public <T> Command initDelete(T entity){
-        StringBuilder sql = sqlBuilder.baseSqlBuild(entity.getClass(),"delete");
+    public <T> Command initDelete(Class<T> tClass,String primaryKey){
+        StringBuilder sql = sqlBuilder.baseSqlBuild(tClass,"delete");
         Command command = CommandFactory.getCommand();
         command.setSQLText(sql.toString());
         List<Object> param = new ArrayList<Object>();
-        param.add(ClassUtil.GetkeyFieldValue(entity.getClass()));
+        param.add(primaryKey);
         command.setSQLParams(param);
         return command;
     }
@@ -63,21 +63,13 @@ public class PreCommand {
         return command;
     }
 
-    public <T> Command initUpdOrFindMapByParam(String tableName,Map<String,Object> columnMap,Map<String,Object> whereMap,String type){
-        List<String> columnKeys ;
-        List<Object> columnValues ;
-        List<String> whereKeys ;
-        List<Object> whereValues ;
-        StringBuffer sql = new StringBuffer();
-        columnKeys = (List<String>)mapToList(columnMap).get("key");
-        columnValues = (List<Object>)mapToList(columnMap).get("values");
-        whereKeys = (List<String>)mapToList(whereMap).get("key");
-        whereValues = (List<Object>)mapToList(whereMap).get("values");
-        if("select".equals(type)){
-            sql = sqlBuilder.selectParamSqlBuild(columnKeys,whereKeys,tableName,"param");
-        }else{
-            sql = sqlBuilder.updateParamSqlBuild(columnKeys,whereKeys,tableName);
-        }
+    public <T> Command initUpdateByParam(Class<T> tClass,Map<String,Object> columnMap,Map<String,Object> whereMap){
+        List<String> columnKeys = (List<String>)mapToList(tClass,columnMap).get("key");
+        List<Object> columnValues = (List<Object>)mapToList(tClass,columnMap).get("values");
+        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("key");
+        List<Object> whereValues = (List<Object>)mapToList(tClass,whereMap).get("values");
+        String tableName = tClass.getAnnotation(TableName.class).value();
+        StringBuffer sql = sqlBuilder.updateParamSqlBuild(columnKeys,whereKeys,tableName);
         Command command = CommandFactory.getCommand();
         command.setSQLText(sql.toString());
         columnValues.addAll(whereValues);
@@ -85,11 +77,24 @@ public class PreCommand {
         return command;
     }
 
-    public <T> Command initDelOrFindObjByParam(String tableName,Map<String,Object> whereMap){
-        List<String> whereKeys = (List<String>)mapToList(whereMap).get("key");
-        List<Object> whereValues = (List<Object>)mapToList(whereMap).get("values");
-        StringBuffer sql = new StringBuffer();
-        if("select".equals("type")){
+    public <T> Command initFindFieldByParam(Class<T> tClass,List<String> fields,Map<String,Object> whereMap){
+        List<String> columns = getColumnList(tClass,fields);
+        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("key");
+        List<Object> whereValues = (List<Object>)mapToList(tClass,whereMap).get("values");
+        String tableName = tClass.getAnnotation(TableName.class).value();
+        StringBuffer sql = sqlBuilder.selectParamSqlBuild(columns,whereKeys,tableName,"param");
+        Command command = CommandFactory.getCommand();
+        command.setSQLText(sql.toString());
+        command.setSQLParams(whereValues);
+        return command;
+    }
+
+    public <T> Command initDelOrFindAllByParam(Class<T> tClass,Map<String,Object> whereMap,String type){
+        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("key");
+        List<Object> whereValues = (List<Object>)mapToList(tClass,whereMap).get("values");
+        StringBuffer sql;
+        String tableName = tClass.getAnnotation(TableName.class).value();
+        if("select".equals(type)){
             sql = sqlBuilder.deleteParamSqlBuild(whereKeys,tableName);
         }else{
             sql = sqlBuilder.selectParamSqlBuild(null,whereKeys,tableName,"all");
@@ -101,24 +106,32 @@ public class PreCommand {
     }
 
     public <T> Command initMySqlByParam(String sql ,Map<String,Object> whereMap){
-        sqlBuilder.mySqlBuild(sql,whereMap);
+        String newSql = sqlBuilder.mySqlBuild(sql,whereMap);
         Command command = CommandFactory.getCommand();
-        command.setSQLText(sql);
+        command.setSQLText(newSql);
         return command;
     }
 
-    private Map<String,Object> mapToList(Map<String,Object> map){
+    private <T> Map<String,Object> mapToList(Class<T> tClass,Map<String,Object> map){
         Map<String,Object> result = new HashMap<>();
         List<String> keys = new ArrayList<>();
         List<Object> values = new ArrayList<>();
         Iterator entries = map.entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry columnEntry = (Map.Entry)entries.next();
-            keys.add(columnEntry.getKey().toString());
+            keys.add(ClassUtil.fieldToColumnName(tClass,columnEntry.getKey().toString()));
             values.add(columnEntry.getValue());
         }
         result.put("keys",keys);
         result.put("values",values);
+        return result;
+    }
+
+    private <T> List<String> getColumnList(Class<T> tClass,List<String> fields){
+        List<String> result = new ArrayList<>();
+        for(String field : fields){
+            result.add(ClassUtil.fieldToColumnName(tClass,field));
+        }
         return result;
     }
 }

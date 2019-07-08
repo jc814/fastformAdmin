@@ -1,7 +1,9 @@
 package com.hzy.fastformadmin.Util.DBUtil.Util;
 
+import com.hzy.fastformadmin.Util.DBUtil.annotation.ColumnName;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Ignore;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
+import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
@@ -29,8 +31,8 @@ public class SQLBuilder {
                     column.append(" ( ");
                     value.append(" values( ");
                     for (Field field : fields) {
-                        if (field.getDeclaredAnnotation(Ignore.class) == null) {
-                            column.append("," + field.getName());
+                        if (field.isAnnotationPresent(Ignore.class)) {
+                            column.append("," + field.getAnnotation(ColumnName.class).value());
                             value.append(" , ?");
                         }
                     }
@@ -47,7 +49,7 @@ public class SQLBuilder {
                 sql.append(MessageFormat.format("update {0} set ", tableName));
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(Ignore.class) || field.isAnnotationPresent(Key.class)) {
-                        column.append(",").append(field.getName()).append(" = ? ");
+                        column.append(" , ").append(field.getAnnotation(ColumnName.class).value()).append(" = ? ");
                     }
                 }
                 column.deleteCharAt(0);
@@ -67,11 +69,10 @@ public class SQLBuilder {
         return sql;
     }
 
-    public StringBuffer updateParamSqlBuild(List<String> columns, List<String> wheres, String tableName) {
+    public <T> StringBuffer updateParamSqlBuild(List<String> columns, List<String> wheres, String tableName) {
         StringBuffer sql = new StringBuffer();
         sql.append(MessageFormat.format("update {0} set ", tableName));
         int i = 0;
-        int j = 0;
         for (String column : columns) {
             if (i != 0) {
                 sql.append(",");
@@ -83,18 +84,17 @@ public class SQLBuilder {
         return sql;
     }
 
-    public StringBuffer deleteParamSqlBuild(List<String> wheres, String tableName) {
+    public <T> StringBuffer deleteParamSqlBuild(List<String> wheres, String tableName) {
         StringBuffer sql = new StringBuffer();
         sql.append(MessageFormat.format("delete from {0} ", tableName));
         sql.append(whereSqlBuild(wheres));
         return sql;
     }
 
-    public StringBuffer selectParamSqlBuild(List<String> columns, List<String> wheres, String tableName, String type) {
+    public <T> StringBuffer selectParamSqlBuild(List<String> columns, List<String> wheres, String tableName, String type) {
         StringBuffer sql = new StringBuffer();
         sql.append("select ");
         int i = 0;
-        int j = 0;
         if ("param".equals(type)) {
             for (String column : columns) {
                 if (i != 0) {
@@ -125,15 +125,15 @@ public class SQLBuilder {
     }
 
     public String mySqlBuild(String sql, Map<String,Object> whereMap) {
+        String newSql = "";
         Iterator entries = whereMap.entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry map = (Map.Entry)entries.next();
             String paramName = map.getKey().toString();
-            //todo 完成paramName和paramValue对应 注意顺序
-            String newSql = sql.replaceFirst("#"+paramName,whereMap.get(paramName));
-            values.add(map.getValue());
+            newSql = sql.replaceFirst("#"+paramName,whereMap.get(paramName).toString());
+
         }
-        return sql;
+        return newSql;
     }
 
 }

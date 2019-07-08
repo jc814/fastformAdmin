@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +17,15 @@ public class Command {
     private DriverManagerDataSource dataSource;
 
     private String SQLText;
-    private List<Object> SQLParams;
+    private List<Object> SQLParams = new ArrayList<>();
 
     public Command() {
         if (jdbcTemplate == null) {
-            jdbcTemplate = Config.GetInstance().getJdbcTemplate(dataSource);
+            jdbcTemplate = Config.GetInstance().getJdbcTemplate();
         }
     }
 
-    private Boolean update() {
+    public Boolean update() {
         int result = 0;
         if (SQLParams.size() > 0) {
             result = jdbcTemplate.update(SQLText, SQLParams);
@@ -36,7 +35,7 @@ public class Command {
         return result > 0 ? Boolean.TRUE : Boolean.FALSE;
     }
 
-    private <T> T queryOneObject(Class<T> tClass) throws Exception {
+    public <T> T queryOneObject(Class<T> tClass){
         Map<String, Object> objectMap = null;
         if (SQLParams.size() > 0) {
             objectMap = jdbcTemplate.queryForMap(SQLText, SQLParams.toArray());
@@ -47,8 +46,7 @@ public class Command {
         return object;
     }
 
-    private <T> List<T> queryListObject(Class<T> tClass) throws Exception {
-        T obj = tClass.newInstance();
+    public <T> List<T> queryListObject(Class<T> tClass) {
         List<Map<String, Object>> objectList = new ArrayList<>();
         List<T> result = new ArrayList<>();
         if (SQLParams.size() > 0) {
@@ -62,7 +60,7 @@ public class Command {
         return result;
     }
 
-    private Map<String, Object> queryOneMap() {
+    public Map<String, Object> queryOneMap() {
         Map<String, Object> objectMap = null;
         if (SQLParams.size() > 0) {
             objectMap = jdbcTemplate.queryForMap(SQLText, SQLParams.toArray());
@@ -73,7 +71,7 @@ public class Command {
 
     }
 
-    private List<Map<String, Object>> queryListMap() {
+    public List<Map<String, Object>> queryListMap() {
         List<Map<String, Object>> objectList = new ArrayList<>();
         if (SQLParams.size() > 0) {
             objectList = jdbcTemplate.queryForList(SQLText, SQLParams.toArray());

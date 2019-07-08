@@ -1,6 +1,8 @@
 package com.hzy.fastformadmin.Util.DBUtil.base;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -8,10 +10,15 @@ import java.util.ResourceBundle;
 
 @Data
 public class Config {
+    @Value("${spring.datasource.url:#{null}}")
     public String url;
+    @Value("${spring.datasource.username:#{null}}")
     public String username;
+    @Value("${spring.datasource.password:#{null}}")
     public String password;
+    @Value("${spring.datasource.driverClassName:#{null}}")
     public String driverClassName;
+
     private static Config config;
 
     public Config() {
@@ -19,7 +26,7 @@ public class Config {
         url = resource.getString("spring.datasource.url");
         username = resource.getString("spring.datasource.username");
         password = resource.getString("spring.datasource.password");
-        driverClassName = resource.getString("spring.datasource.driver-class-name");
+        driverClassName = resource.getString("spring.datasource.driverClassName");
     }
 
     public static Config GetInstance() {
