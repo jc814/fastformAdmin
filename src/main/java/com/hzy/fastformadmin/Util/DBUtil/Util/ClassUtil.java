@@ -59,7 +59,7 @@ public class ClassUtil {
         Field[] fields = tClass.getDeclaredFields();
         for (Field field : fields) {
             if (field.getDeclaredAnnotation(Key.class)!= null) {
-                keyName = field.getName();
+                keyName = field.getAnnotation(ColumnName.class).value();
                 break;
             }
         }
@@ -72,9 +72,9 @@ public class ClassUtil {
         Field[] fields = t.getClass().getDeclaredFields();
         try {
             for (Field field : fields) {
+                field.setAccessible(Boolean.TRUE);
                 if (!field.isAnnotationPresent(Ignore.class)) {
                     result.add(field.get(t));
-                    break;
                 }
             }
         } catch (Exception e) {
@@ -88,7 +88,8 @@ public class ClassUtil {
     public static <T> String fieldToColumnName(Class<T> tClass,String field) {
         Field objectField = null;
         try {
-            objectField = tClass.getField(field);
+            objectField = tClass.getDeclaredField(field);
+            objectField.setAccessible(Boolean.TRUE);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }

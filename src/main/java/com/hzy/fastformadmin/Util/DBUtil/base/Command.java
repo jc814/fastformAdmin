@@ -28,9 +28,9 @@ public class Command {
     public Boolean update() {
         int result = 0;
         if (SQLParams.size() > 0) {
-            result = jdbcTemplate.update(SQLText, SQLParams);
+            result = jdbcTemplate.update(SQLText, SQLParams.toArray());
         } else {
-            result = jdbcTemplate.update(SQLText, SQLParams);
+            result = jdbcTemplate.update(SQLText, SQLParams.toArray());
         }
         return result > 0 ? Boolean.TRUE : Boolean.FALSE;
     }

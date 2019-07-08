@@ -38,12 +38,18 @@ public class PreCommand {
         StringBuilder sql = sqlBuilder.baseSqlBuild(entity.getClass(),"update");
         List<Object> param = new ArrayList<Object>();
         Field[] fields = entity.getClass().getDeclaredFields();
+        String keyValue = "";
         try {
             for (Field field : fields) {
-                if (field.isAnnotationPresent(Ignore.class) || field.isAnnotationPresent(Key.class)) {
+                field.setAccessible(Boolean.TRUE);
+                if (!field.isAnnotationPresent(Ignore.class) && !field.isAnnotationPresent(Key.class)) {
                     param.add(field.get(entity));
                 }
+                if(field.isAnnotationPresent(Key.class)){
+                    keyValue = field.get(entity).toString();
+                }
             }
+            param.add(keyValue);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -64,9 +70,9 @@ public class PreCommand {
     }
 
     public <T> Command initUpdateByParam(Class<T> tClass,Map<String,Object> columnMap,Map<String,Object> whereMap){
-        List<String> columnKeys = (List<String>)mapToList(tClass,columnMap).get("key");
+        List<String> columnKeys = (List<String>)mapToList(tClass,columnMap).get("keys");
         List<Object> columnValues = (List<Object>)mapToList(tClass,columnMap).get("values");
-        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("key");
+        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("keys");
         List<Object> whereValues = (List<Object>)mapToList(tClass,whereMap).get("values");
         String tableName = tClass.getAnnotation(TableName.class).value();
         StringBuffer sql = sqlBuilder.updateParamSqlBuild(columnKeys,whereKeys,tableName);
@@ -79,7 +85,7 @@ public class PreCommand {
 
     public <T> Command initFindFieldByParam(Class<T> tClass,List<String> fields,Map<String,Object> whereMap){
         List<String> columns = getColumnList(tClass,fields);
-        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("key");
+        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("keys");
         List<Object> whereValues = (List<Object>)mapToList(tClass,whereMap).get("values");
         String tableName = tClass.getAnnotation(TableName.class).value();
         StringBuffer sql = sqlBuilder.selectParamSqlBuild(columns,whereKeys,tableName,"param");
@@ -90,11 +96,11 @@ public class PreCommand {
     }
 
     public <T> Command initDelOrFindAllByParam(Class<T> tClass,Map<String,Object> whereMap,String type){
-        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("key");
+        List<String> whereKeys = (List<String>)mapToList(tClass,whereMap).get("keys");
         List<Object> whereValues = (List<Object>)mapToList(tClass,whereMap).get("values");
         StringBuffer sql;
         String tableName = tClass.getAnnotation(TableName.class).value();
-        if("select".equals(type)){
+        if("delete".equals(type)){
             sql = sqlBuilder.deleteParamSqlBuild(whereKeys,tableName);
         }else{
             sql = sqlBuilder.selectParamSqlBuild(null,whereKeys,tableName,"all");

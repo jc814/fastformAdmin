@@ -22,22 +22,26 @@ public class SQLBuilder {
         StringBuilder sql = new StringBuilder();
         StringBuilder column = new StringBuilder();
         StringBuilder value = new StringBuilder();
-        Field[] fields = tClass.getClass().getDeclaredFields();
+        Field[] fields = tClass.getDeclaredFields();
         switch (option) {
             case "insert":
                 sql.append(MessageFormat.format("insert into {0} ", tableName));
                 try {
-
+                    int i = 0;
                     column.append(" ( ");
                     value.append(" values( ");
                     for (Field field : fields) {
-                        if (field.isAnnotationPresent(Ignore.class)) {
-                            column.append("," + field.getAnnotation(ColumnName.class).value());
-                            value.append(" , ?");
+                        field.setAccessible(Boolean.TRUE);
+                        if (!field.isAnnotationPresent(Ignore.class)) {
+                            if (i != 0) {
+                                column.append(" , ");
+                                value.append(" , ");
+                            }
+                            i++;
+                            column.append(field.getAnnotation(ColumnName.class).value());
+                            value.append(" ? ");
                         }
                     }
-                    column.deleteCharAt(0);
-                    value.deleteCharAt(0);
                     column.append(" ) ");
                     value.append(" ) ");
                     sql.append(column).append(value);
@@ -46,13 +50,17 @@ public class SQLBuilder {
                 }
                 break;
             case "update":
+                int i = 0;
                 sql.append(MessageFormat.format("update {0} set ", tableName));
                 for (Field field : fields) {
-                    if (field.isAnnotationPresent(Ignore.class) || field.isAnnotationPresent(Key.class)) {
-                        column.append(" , ").append(field.getAnnotation(ColumnName.class).value()).append(" = ? ");
+                    if (!field.isAnnotationPresent(Ignore.class) && !field.isAnnotationPresent(Key.class)) {
+                        if (i != 0) {
+                            column.append(" , ");
+                        }
+                        i++;
+                        column.append(field.getAnnotation(ColumnName.class).value()).append(" = ? ");
                     }
                 }
-                column.deleteCharAt(0);
                 sql.append(column);
                 sql.append(MessageFormat.format(" where {0}=?", KeyName));
                 break;
@@ -131,7 +139,7 @@ public class SQLBuilder {
             Map.Entry map = (Map.Entry)entries.next();
             String paramName = map.getKey().toString();
             newSql = sql.replaceFirst("#"+paramName,whereMap.get(paramName).toString());
-
+            sql = newSql;
         }
         return newSql;
     }

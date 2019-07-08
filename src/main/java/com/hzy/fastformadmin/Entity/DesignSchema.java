@@ -17,6 +17,6 @@ public class DesignSchema {
     private String schemaName;
     @ColumnName("DESIGN_ID")
     private String designId;
-    @ColumnName("DESCRIBE")
-    private String describe;
+    @ColumnName("DESCRIPTION")
+    private String description;
 }

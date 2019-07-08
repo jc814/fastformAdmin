@@ -22,13 +22,13 @@ public class FastformadminApplicationTests {
     @Test
     public void updateById() {
         DesignSchema t = new DesignSchema();
-        t.setId("1").setSchemaName("2").setDesignId("2").setDescribe("2");
+        t.setId("1").setSchemaName("2").setDesignId("2").setDescription("2");
         easyDao.updateById(t);
     }
 
     @Test
     public void updateByParam() {
-        Map<String, Object> map1 = MapUtil.newMap("describe","3","designId","3");
+        Map<String, Object> map1 = MapUtil.newMap("description","3","designId","3");
         Map<String, Object> map2 = MapUtil.newMap("id","1","schemaName","2");
         easyDao.updateByParam(DesignSchema.class,map1,map2);
     }
@@ -40,18 +40,18 @@ public class FastformadminApplicationTests {
 
     @Test
     public void deleteByParam() {
-        Map<String, Object> map1 = MapUtil.newMap("describe","2","designId","2");
+        Map<String, Object> map1 = MapUtil.newMap("description","2","designId","2");
         easyDao.deleteByParam(DesignSchema.class,map1);
     }
 
     @Test
     public void insert() {
         DesignSchema t1 = new DesignSchema();
-        t1.setId("1").setSchemaName("2").setDesignId("2").setDescribe("2");
+        t1.setId("1").setSchemaName("2").setDesignId("2").setDescription("2");
         DesignSchema t2 = new DesignSchema();
-        t2.setId("2").setSchemaName("3").setDesignId("3").setDescribe("3");
+        t2.setId("2").setSchemaName("3").setDesignId("3").setDescription("3");
         DesignSchema t3 = new DesignSchema();
-        t3.setId("3").setSchemaName("3").setDesignId("4").setDescribe("4");
+        t3.setId("3").setSchemaName("3").setDesignId("4").setDescription("4");
         easyDao.insert(t1);
         easyDao.insert(t2);
         easyDao.insert(t3);
@@ -59,51 +59,59 @@ public class FastformadminApplicationTests {
 
     @Test
     public void findObject() {
-        easyDao.findObject(DesignSchema.class,"1");
+        DesignSchema a = easyDao.findObject(DesignSchema.class,"1");
+        System.out.println("a");
     }
 
     @Test
     public void findMap1() {
         Map<String, Object> map1 = MapUtil.newMap("id","1","schemaName","2");
-        easyDao.findMap(DesignSchema.class,map1);
+        Map<String, Object> a = easyDao.findMap(DesignSchema.class,map1);
+        System.out.println("a");
     }
 
     @Test
     public void findMap2() {
         Map<String, Object> map1 = MapUtil.newMap("id","1","schemaName","2");
-        easyDao.findMap(DesignSchema.class,map1,"describe","designId");
+        Map<String, Object> a = easyDao.findMap(DesignSchema.class,map1,"description","designId");
+        System.out.println("a");
     }
 
     @Test
     public void findMapList1() {
         Map<String, Object> map1 = MapUtil.newMap("schemaName","3");
-        easyDao.findMapList(DesignSchema.class,map1);
+        List<Map<String, Object>> a = easyDao.findMapList(DesignSchema.class,map1);
+        System.out.println("a");
     }
 
     @Test
     public void findMapList2() {
         Map<String, Object> map1 = MapUtil.newMap("schemaName","3");
-        easyDao.findMapList(DesignSchema.class,map1,"describe","designId");
+        List<Map<String, Object>> a = easyDao.findMapList(DesignSchema.class,map1,"description","designId");
+        System.out.println("a");
     }
 
     @Test
     public void findObjectList() {
         Map<String, Object> map1 = MapUtil.newMap("schemaName","3");
-        easyDao.findObjectList(DesignSchema.class,map1);
+        List<DesignSchema> a =easyDao.findObjectList(DesignSchema.class,map1);
+        System.out.println("a");
     }
 
     @Test
     public void findMySql() {
         Map<String, Object> map1 = MapUtil.newMap("b","1","a","2");
-        String sql = "select from design_schema ds left join design d on ds.DESIGN_ID = d.ID where ds.SCHEMA_NAME = #a and ds.ID = #b";
-        easyDao.findMySql(sql,map1);
+        String sql = "select * from design_schema ds left join design d on ds.DESIGN_ID = d.ID where ds.SCHEMA_NAME = #a and ds.ID = #b";
+        List<Map<String, Object>> a = easyDao.findMySql(sql,map1);
+        System.out.println("a");
     }
 
     @Test
     public void execMySql() {
-        String sql = "update design_schema set DESCRIBE = #a,DESIGN_ID = #b where ID = #c";
+        String sql = "update design_schema set description = #a,DESIGN_ID = #b where ID = #c";
         Map<String, Object> map1 = MapUtil.newMap("a","2","b","2","c","2");
-        easyDao.execMySql(sql,map1);
+        Boolean a = easyDao.execMySql(sql,map1);
+        System.out.println("a");
     }
 
 }
