@@ -1,6 +1,5 @@
 package com.hzy.fastformadmin;
 
-import com.hzy.fastformadmin.Entity.DesignSchema;
 import com.hzy.fastformadmin.Util.DBUtil.EasyDao;
 import com.hzy.fastformadmin.Util.MapUtil;
 import org.junit.Test;

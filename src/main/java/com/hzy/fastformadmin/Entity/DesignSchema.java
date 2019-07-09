@@ -6,9 +6,14 @@ import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Objects;
 @Data
-@TableName("design_schema")
 @Accessors(chain = true)
+@TableName("design_schema")
 public class DesignSchema {
     @Key
     @ColumnName("ID")
@@ -19,4 +24,5 @@ public class DesignSchema {
     private String designId;
     @ColumnName("DESCRIPTION")
     private String description;
+
 }

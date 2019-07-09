@@ -9,12 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/schema")
-public class SchemaWeb{
-    @Autowired
-    private DesignSchemaSer designSchemaSer;
+public class DesignSchemaWeb{
 
-    @RequestMapping(value="/fineOne/{id}")
-    public DesignSchema findOne(@PathVariable("id")  String id) {
-        return designSchemaSer.findOne(id);
-    }
 }
