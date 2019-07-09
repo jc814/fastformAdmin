@@ -3,7 +3,6 @@ package com.hzy.fastformadmin.Util.DBUtil.Util;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.ColumnName;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Ignore;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
-import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
@@ -81,12 +80,16 @@ public class SQLBuilder {
         StringBuffer sql = new StringBuffer();
         sql.append(MessageFormat.format("update {0} set ", tableName));
         int i = 0;
-        for (String column : columns) {
-            if (i != 0) {
-                sql.append(",");
+        if(columns.size() > 0){
+            for (String column : columns) {
+                if (i != 0) {
+                    sql.append(",");
+                }
+                i++;
+                sql.append(column).append(" = ").append(" ? ");
             }
-            i++;
-            sql.append(column).append(" = ").append(" ? ");
+        }else{
+            sql.append(" * ");
         }
         sql.append(whereSqlBuild(wheres));
         return sql;
@@ -103,7 +106,7 @@ public class SQLBuilder {
         StringBuffer sql = new StringBuffer();
         sql.append("select ");
         int i = 0;
-        if ("param".equals(type)) {
+        if ("param".equals(type) || columns.size() > 0) {
             for (String column : columns) {
                 if (i != 0) {
                     sql.append(" , ");
@@ -120,26 +123,31 @@ public class SQLBuilder {
     }
 
     public StringBuffer whereSqlBuild(List<String> wheres) {
-        StringBuffer sql = new StringBuffer(" where ");
-        int i = 0;
-        for (String where : wheres) {
-            if (i != 0) {
-                sql.append(" and ");
+        StringBuffer sql = new StringBuffer("");
+        if(wheres != null && wheres.size() > 0){
+            sql.append(" where ");
+            int i = 0;
+            for (String where : wheres) {
+                if (i != 0) {
+                    sql.append(" and ");
+                }
+                i++;
+                sql.append(where).append(" = ").append(" ? ");
             }
-            i++;
-            sql.append(where).append(" = ").append(" ? ");
         }
         return sql;
     }
 
     public String mySqlBuild(String sql, Map<String,Object> whereMap) {
         String newSql = "";
-        Iterator entries = whereMap.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry map = (Map.Entry)entries.next();
-            String paramName = map.getKey().toString();
-            newSql = sql.replaceFirst("#"+paramName,whereMap.get(paramName).toString());
-            sql = newSql;
+        if(whereMap != null){
+            Iterator entries = whereMap.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry map = (Map.Entry)entries.next();
+                String paramName = map.getKey().toString();
+                newSql = sql.replaceFirst("#"+paramName,"'"+whereMap.get(paramName).toString()+"'");
+                sql = newSql;
+            }
         }
         return newSql;
     }

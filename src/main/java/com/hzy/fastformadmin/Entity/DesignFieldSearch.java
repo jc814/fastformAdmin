@@ -6,11 +6,6 @@ import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.Objects;
 
 @Data
 @Accessors(chain = true)

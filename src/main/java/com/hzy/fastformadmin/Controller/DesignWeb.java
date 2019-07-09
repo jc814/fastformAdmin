@@ -20,6 +20,6 @@ public class DesignWeb {
 
     @RequestMapping(value="/fineAll")
     public List<Design> fineAll() {
-        designSer.findObjectList(Design.class,null);
+        return designSer.findObjectList(Design.class,null);
     }
 }

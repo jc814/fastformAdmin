@@ -103,7 +103,7 @@ public class PreCommand {
         if("delete".equals(type)){
             sql = sqlBuilder.deleteParamSqlBuild(whereKeys,tableName);
         }else{
-            sql = sqlBuilder.selectParamSqlBuild(null,whereKeys,tableName,"all");
+            sql = sqlBuilder.selectParamSqlBuild(new ArrayList<>(),whereKeys,tableName,"all");
         }
         Command command = CommandFactory.getCommand();
         command.setSQLText(sql.toString());
@@ -122,11 +122,13 @@ public class PreCommand {
         Map<String,Object> result = new HashMap<>();
         List<String> keys = new ArrayList<>();
         List<Object> values = new ArrayList<>();
-        Iterator entries = map.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry columnEntry = (Map.Entry)entries.next();
-            keys.add(ClassUtil.fieldToColumnName(tClass,columnEntry.getKey().toString()));
-            values.add(columnEntry.getValue());
+        if(map != null){
+            Iterator entries = map.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry columnEntry = (Map.Entry)entries.next();
+                keys.add(ClassUtil.fieldToColumnName(tClass,columnEntry.getKey().toString()));
+                values.add(columnEntry.getValue());
+            }
         }
         result.put("keys",keys);
         result.put("values",values);
