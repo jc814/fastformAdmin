@@ -86,8 +86,8 @@ public class FastformadminApplicationTests {
 
     @Test
     public void findMapList2() {
-        Map<String, Object> map1 = MapUtil.newMap("schemaName","3");
-        List<Map<String, Object>> a = easyDao.findMapList(DesignSchema.class,map1,"description","designId");
+        Map<String, Object> map1 = MapUtil.newMap("schemaName","mysql");
+        List<Map<String, Object>> a = easyDao.setLimit(0,1).setGroupBy("designId").findMapList(DesignSchema.class,map1,"description","designId");
         System.out.println("a");
     }
 
@@ -100,9 +100,9 @@ public class FastformadminApplicationTests {
 
     @Test
     public void findMySql() {
-        Map<String, Object> map1 = MapUtil.newMap("b","1","a","2");
-        String sql = "select * from design_schema ds left join design d on ds.DESIGN_ID = d.ID where ds.SCHEMA_NAME = #a and ds.ID = #b";
-        List<Map<String, Object>> a = easyDao.findMySql(sql,map1);
+        Map<String, Object> map1 = MapUtil.newMap("designId","4");
+        String sql = "select * from design_schema where DESIGN_ID = #designId";
+        List<Map<String, Object>> a = easyDao.setGroupBy("DESCRIPTIPN").findMySql(sql,map1);
         System.out.println("a");
     }
 

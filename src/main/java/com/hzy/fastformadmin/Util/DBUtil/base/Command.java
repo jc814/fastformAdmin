@@ -1,6 +1,7 @@
 package com.hzy.fastformadmin.Util.DBUtil.base;
 
 import com.hzy.fastformadmin.Util.DBUtil.Util.ClassUtil;
+import com.hzy.fastformadmin.Util.DBUtil.annotation.TraceMethod;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,6 +26,7 @@ public class Command {
         }
     }
 
+    @TraceMethod
     public Boolean update() {
         int result = 0;
         if (SQLParams.size() > 0) {
@@ -34,7 +36,7 @@ public class Command {
         }
         return result > 0 ? Boolean.TRUE : Boolean.FALSE;
     }
-
+    @TraceMethod
     public <T> T queryOneObject(Class<T> tClass){
         Map<String, Object> objectMap = null;
         if (SQLParams.size() > 0) {
@@ -45,7 +47,7 @@ public class Command {
         T object = ClassUtil.MapToObject(tClass, objectMap);
         return object;
     }
-
+    @TraceMethod
     public <T> List<T> queryListObject(Class<T> tClass) {
         List<Map<String, Object>> objectList = new ArrayList<>();
         List<T> result = new ArrayList<>();
@@ -59,7 +61,7 @@ public class Command {
         }
         return result;
     }
-
+    @TraceMethod
     public Map<String, Object> queryOneMap() {
         Map<String, Object> objectMap = null;
         if (SQLParams.size() > 0) {
@@ -70,7 +72,7 @@ public class Command {
         return objectMap;
 
     }
-
+    @TraceMethod
     public List<Map<String, Object>> queryListMap() {
         List<Map<String, Object>> objectList = new ArrayList<>();
         if (SQLParams.size() > 0) {

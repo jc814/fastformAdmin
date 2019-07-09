@@ -4,6 +4,7 @@ import com.hzy.fastformadmin.Util.DBUtil.annotation.ColumnName;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Ignore;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
+import com.mysql.cj.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -86,14 +87,20 @@ public class ClassUtil {
     }
 
     public static <T> String fieldToColumnName(Class<T> tClass,String field) {
-        Field objectField = null;
-        try {
-            objectField = tClass.getDeclaredField(field);
-            objectField.setAccessible(Boolean.TRUE);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+        String columnName = "";
+        if(!StringUtils.isNullOrEmpty(field)){
+            Field objectField = null;
+            try {
+                objectField = tClass.getDeclaredField(field);
+                objectField.setAccessible(Boolean.TRUE);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            columnName = objectField.getAnnotation(ColumnName.class).value();
+            return columnName;
+        }else{
+            System.out.println("ClassUtil.fieldToColumnName传入参数field为空");
         }
-        String columnName = objectField.getAnnotation(ColumnName.class).value();
         return columnName;
     }
 

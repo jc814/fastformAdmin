@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Inherited
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TraceMethod {
 
