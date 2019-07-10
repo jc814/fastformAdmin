@@ -18,7 +18,7 @@ public class DesignWeb {
     @Autowired
     public DesignSer designSer;
 
-    @RequestMapping(value="/fineAll")
+    @RequestMapping(value="/getList")
     public List<Design> fineAll() {
         return designSer.findObjectList(Design.class,null);
     }
