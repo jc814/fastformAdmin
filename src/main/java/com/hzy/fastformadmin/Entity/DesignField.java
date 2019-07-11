@@ -22,6 +22,4 @@ public class DesignField {
     private String fieldRef;
     @ColumnName("IS_DISPLAY")
     private String isDisplay;
-
-
 }

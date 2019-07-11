@@ -32,10 +32,22 @@ public class Command {
         if (SQLParams.size() > 0) {
             result = jdbcTemplate.update(SQLText, SQLParams.toArray());
         } else {
-            result = jdbcTemplate.update(SQLText, SQLParams.toArray());
+            result = jdbcTemplate.update(SQLText);
         }
         return result > 0 ? Boolean.TRUE : Boolean.FALSE;
     }
+
+    @TraceMethod
+    public Boolean batchupdate() {
+        int result[];
+        if (SQLParams.size() > 0) {
+            result = jdbcTemplate.batchUpdate(SQLText, SQLParams);
+        } else {
+            result = jdbcTemplate.batchUpdate(SQLText);
+        }
+        return result > 0 ? Boolean.TRUE : Boolean.FALSE;
+    }
+
     @TraceMethod
     public <T> T queryOneObject(Class<T> tClass){
         Map<String, Object> objectMap = null;
