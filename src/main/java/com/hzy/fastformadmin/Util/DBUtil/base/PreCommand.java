@@ -118,6 +118,13 @@ public class PreCommand {
         return command;
     }
 
+    public <T> Command initBatchUpdate(String sql ,List<Object[]> whereList){
+        Command command = CommandFactory.getCommand();
+        command.setSQLText(sql);
+        command.setBacthSQLParams(whereList);
+        return command;
+    }
+
     private <T> Map<String,Object> mapToList(Class<T> tClass,Map<String,Object> map){
         Map<String,Object> result = new HashMap<>();
         List<String> keys = new ArrayList<>();

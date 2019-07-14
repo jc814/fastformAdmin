@@ -25,7 +25,6 @@ public class DesignWeb {
 
     @RequestMapping(value="/insert",method = RequestMethod.POST)
     public Boolean insert(@RequestBody Design design) {
-        design.setId(StringUtil.createUUID());
-        return designSer.insert(design);
+        return designSer.designAdd(design);
     }
 }

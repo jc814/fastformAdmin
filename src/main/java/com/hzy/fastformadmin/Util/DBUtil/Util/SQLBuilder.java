@@ -151,5 +151,4 @@ public class SQLBuilder {
         }
         return newSql;
     }
-
 }

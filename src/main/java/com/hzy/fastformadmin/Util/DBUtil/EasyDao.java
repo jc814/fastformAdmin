@@ -138,6 +138,12 @@ public class EasyDao {
         return command.queryListMap();
     }
 
+    public Boolean batchUpdate(String sql, List<Object[]> objects) {
+        Command command = preCommand.initBatchUpdate(sql, objects);
+        command.setSQLText(sql);
+        return command.batchUpdate();
+    }
+
     public Boolean execMySql(String sql, Map<String, Object> whereMap) {
         sql = sql.trim();
         Command command = preCommand.initMySqlByParam(sql, whereMap);
