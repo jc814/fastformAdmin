@@ -1,14 +1,11 @@
 package com.hzy.fastformadmin.Util.DBUtil.base;
 
-import com.hzy.fastformadmin.Util.DBUtil.Util.ClassUtil;
+import com.hzy.fastformadmin.Util.DBUtil.util.ClassUtil;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.TraceMethod;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +14,6 @@ import java.util.Map;
 @Accessors(chain = true)
 public class Command {
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    DataSource dataSource;
-    //private DriverManagerDataSource dataSource;
-
     private String SQLText;
     private List<Object> SQLParams = new ArrayList<>();
     private List<Object[]> bacthSQLParams = new ArrayList<>();

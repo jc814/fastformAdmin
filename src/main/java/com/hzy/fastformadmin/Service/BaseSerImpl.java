@@ -2,7 +2,6 @@ package com.hzy.fastformadmin.Service;
 
 import com.hzy.fastformadmin.Util.DBUtil.EasyDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

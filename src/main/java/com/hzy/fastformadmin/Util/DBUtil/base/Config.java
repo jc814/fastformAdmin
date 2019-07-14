@@ -1,28 +1,21 @@
 package com.hzy.fastformadmin.Util.DBUtil.base;
 
+import com.hzy.fastformadmin.Util.DBUtil.util.SpringContextUtil;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.ResourceBundle;
 
 @Data
 public class Config {
-    @Value("${spring.datasource.url:#{null}}")
     public String url;
-    @Value("${spring.datasource.username:#{null}}")
     public String username;
-    @Value("${spring.datasource.password:#{null}}")
     public String password;
-    @Value("${spring.datasource.driverClassName:#{null}}")
     public String driverClassName;
 
-    @Resource
-    DataSource dataSource;
+    DataSource dataSource = SpringContextUtil.getBean(DataSource.class);
 
     private static Config config;
 
@@ -42,7 +35,6 @@ public class Config {
     }
 
     public JdbcTemplate getJdbcTemplate() {
-        //return new JdbcTemplate(GetInstance().getDataSource());
         return new JdbcTemplate(dataSource);
     }
 

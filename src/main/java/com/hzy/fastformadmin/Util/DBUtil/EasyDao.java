@@ -1,6 +1,6 @@
 package com.hzy.fastformadmin.Util.DBUtil;
 
-import com.hzy.fastformadmin.Util.DBUtil.Util.ClassUtil;
+import com.hzy.fastformadmin.Util.DBUtil.util.ClassUtil;
 import com.hzy.fastformadmin.Util.DBUtil.base.Command;
 import com.hzy.fastformadmin.Util.DBUtil.base.PreCommand;
 import org.springframework.stereotype.Repository;

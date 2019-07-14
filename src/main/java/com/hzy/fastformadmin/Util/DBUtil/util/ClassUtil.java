@@ -1,4 +1,4 @@
-package com.hzy.fastformadmin.Util.DBUtil.Util;
+package com.hzy.fastformadmin.Util.DBUtil.util;
 
 import com.hzy.fastformadmin.Util.DBUtil.annotation.ColumnName;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Ignore;

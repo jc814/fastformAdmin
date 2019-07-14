@@ -1,7 +1,7 @@
 package com.hzy.fastformadmin.Util.DBUtil.base;
 
-import com.hzy.fastformadmin.Util.DBUtil.Util.ClassUtil;
-import com.hzy.fastformadmin.Util.DBUtil.Util.SQLBuilder;
+import com.hzy.fastformadmin.Util.DBUtil.util.ClassUtil;
+import com.hzy.fastformadmin.Util.DBUtil.util.SQLBuilder;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Ignore;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.Key;
 import com.hzy.fastformadmin.Util.DBUtil.annotation.TableName;
