@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/field")
@@ -21,8 +22,13 @@ public class DesignFieldWeb {
     public DesignFieldSer designFieldSer;
 
     @RequestMapping(value="/getList")
-    public List<DesignField> fineAll(String designId) {
-        return designFieldSer.findObjectList(DesignField.class, MapUtil.newMap("designId",designId));
+    public List<Map<String,Object>> fineAll(String designId) {
+        return designFieldSer.fieldList(designId);
+    }
+
+    @RequestMapping(value="/changeShow")
+    public Boolean changeShow(String id, String type, String state) {
+        return designFieldSer.changeShow(id,type,state);
     }
 
 }

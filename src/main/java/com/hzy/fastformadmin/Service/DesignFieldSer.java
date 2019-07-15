@@ -12,4 +12,6 @@ public interface DesignFieldSer extends BaseSer<DesignField> {
 
     public List<Map<String,Object>> fieldList(String designId);
 
+    public Boolean changeShow(String fieldId,String type,String state);
+
 }

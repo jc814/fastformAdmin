@@ -1,7 +1,6 @@
 package com.hzy.fastformadmin.Service;
 
-import com.hzy.fastformadmin.Entity.Design;
-import com.hzy.fastformadmin.Entity.DesignField;
+import com.hzy.fastformadmin.Entity.*;
 import com.hzy.fastformadmin.Util.DBUtil.EasyDao;
 import com.hzy.fastformadmin.Util.MapUtil;
 import com.hzy.fastformadmin.Util.StringUtil;
@@ -45,24 +44,30 @@ public class DesignSerImp extends BaseSerImpl<Design> implements DesignSer {
                     MapUtil.newMap("database",dataBaseName,"tableName",design.getTableName(),"fieldName",str));
             String fieldId = StringUtil.createUUID();
             Object[] fieldObject = {fieldId,design.getId(),str,str,1,MapUtil.getValue(list.get(0),"COLUMN_COMMENT")};
-            Object[] fieldAddObject = {fieldId,design.getId(),str,str,1,MapUtil.getValue(list.get(0),"COLUMN_COMMENT")};
-            Object[] fieldListObject = {fieldId,design.getId(),str,str,1,MapUtil.getValue(list.get(0),"COLUMN_COMMENT")};
-            Object[] fieldSearchObject = {fieldId,design.getId(),str,str,1,MapUtil.getValue(list.get(0),"COLUMN_COMMENT")};
+            Object[] fieldAddObject = {StringUtil.createUUID(),fieldId,100,0,0,0,1};
+            Object[] fieldListObject = {StringUtil.createUUID(),fieldId,100,0,0,0};
+            Object[] fieldSearchObject = {StringUtil.createUUID(),fieldId,100,0,0};
             fieldObjects.add(fieldObject);
             fieldAddObjects.add(fieldAddObject);
             fieldListObjects.add(fieldListObject);
             fieldSearchObjects.add(fieldSearchObject);
         });
         easyDao.batchUpdate(fieldSql,fieldObjects);
-        easyDao.batchUpdate(fieldAddSql,fieldObjects);
-        easyDao.batchUpdate(fieldSearchSql,fieldObjects);
-        easyDao.batchUpdate(fieldListSql,fieldObjects);
-        return
+        easyDao.batchUpdate(fieldAddSql,fieldAddObjects);
+        easyDao.batchUpdate(fieldSearchSql,fieldListObjects);
+        easyDao.batchUpdate(fieldListSql,fieldSearchObjects);
+        return Boolean.TRUE;
     }
 
     @Override
     public Boolean designDel(String designId) {
         easyDao.deleteById(Design.class,designId);
+        List<DesignField> list = easyDao.findObjectList(DesignField.class,MapUtil.newMap("designId",designId));
+        list.forEach(field -> {
+            easyDao.deleteByParam(DesignFieldAdd.class,MapUtil.newMap("designFieldId",field.getId()));
+            easyDao.deleteByParam(DesignFieldList.class,MapUtil.newMap("designFieldId",field.getId()));
+            easyDao.deleteByParam(DesignFieldSearch.class,MapUtil.newMap("designFieldId",field.getId()));
+        });
         easyDao.deleteByParam(DesignField.class,MapUtil.newMap("designId",designId));
         return Boolean.TRUE;
     }
