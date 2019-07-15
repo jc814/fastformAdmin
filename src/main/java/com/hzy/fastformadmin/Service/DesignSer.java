@@ -8,4 +8,6 @@ public interface DesignSer extends BaseSer<Design> {
 
     public Boolean designAdd(Design design);
 
+    public Boolean designDel(String designId);
+
 }

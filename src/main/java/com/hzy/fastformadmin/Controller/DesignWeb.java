@@ -27,4 +27,9 @@ public class DesignWeb {
     public Boolean insert(@RequestBody Design design) {
         return designSer.designAdd(design);
     }
+
+    @RequestMapping(value="/delete/{designId}")
+    public Boolean designDel(@PathVariable ( "designId" ) String designId) {
+        return designSer.designDel(designId);
+    }
 }

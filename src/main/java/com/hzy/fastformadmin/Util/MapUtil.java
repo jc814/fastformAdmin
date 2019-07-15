@@ -23,7 +23,7 @@ public class MapUtil {
         if(obj == null){
             return "";
         }else {
-            return obj.toString();
+            return obj==null?"":obj.toString();
         }
     }
 
