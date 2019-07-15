@@ -15,7 +15,7 @@ public class Config {
     public String password;
     public String driverClassName;
 
-    DataSource dataSource = SpringContextUtil.getBean(DataSource.class);
+    public DataSource dataSource = SpringContextUtil.getBean(DataSource.class);
 
     private static Config config;
 
