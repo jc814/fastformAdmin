@@ -25,11 +25,21 @@ public class DesignWeb {
 
     @RequestMapping(value="/insert",method = RequestMethod.POST)
     public Boolean insert(@RequestBody Design design) {
-        return designSer.designAdd(design);
+        if(StringUtil.isNotEmpty(design.getId())){
+            return designSer.updateById(design);
+        }else{
+            return designSer.designAdd(design);
+        }
+
     }
 
     @RequestMapping(value="/delete/{designId}")
     public Boolean designDel(@PathVariable ( "designId" ) String designId) {
         return designSer.designDel(designId);
+    }
+
+    @RequestMapping(value="/designView/{designId}")
+    public Design designView(@PathVariable ( "designId" ) String designId) {
+        return designSer.findObject(Design.class, designId);
     }
 }
